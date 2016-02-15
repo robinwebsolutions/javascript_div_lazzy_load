@@ -1,0 +1,130 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="isInViewport.js"></script>
+		<style>
+			#mainDivId{
+				width:300px; 
+				overflow:scroll; 
+				height:300px;
+			}
+
+			.dataElement{
+				width: 100%;
+				height: 30px;
+				border-color: red;
+				border: 1px solid red;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="mainDivId">
+			<div class="dataElement dataElement0" data-counter="0">0</div>
+			<div class="dataElement dataElement1" data-counter="1">1</div>
+			<div class="dataElement dataElement2" data-counter="2">2</div>
+			<div class="dataElement dataElement3" data-counter="3">3</div>
+			<div class="dataElement dataElement4" data-counter="4">4</div>
+			<div class="dataElement dataElement5" data-counter="5">5</div>
+			<div class="dataElement dataElement6" data-counter="6">6</div>
+			<div class="dataElement dataElement7" data-counter="7">7</div>
+			<div class="dataElement dataElement8" data-counter="8">8</div>
+			<div class="dataElement dataElement9" data-counter="9">9</div>
+			<div class="dataElement dataElement10" data-counter="10">10</div>
+			<div class="dataElement dataElement11" data-counter="11">11</div>
+			<div class="dataElement dataElement12" data-counter="12">12</div>
+			<div class="dataElement dataElement13" data-counter="13">13</div>
+			<div class="dataElement dataElement14" data-counter="14">14</div>
+			<div class="dataElement dataElement15" data-counter="15">15</div>
+			<div class="dataElement dataElement16" data-counter="16">16</div>
+			<div class="dataElement dataElement17" data-counter="17">17</div>
+			<div class="dataElement dataElement18" data-counter="18">18</div>
+			<div class="dataElement dataElement19" data-counter="19">19</div>
+			<div class="dataElement dataElement20" data-counter="20">20</div>
+			<div class="dataElement dataElement21" data-counter="21">21</div>
+		</div>	
+	<script>
+	
+		var htmlObj = [];
+		for(var k=0; k<22; k++){
+			htmlObj[k] = '<div class="dataElement dataElement' + k + '" data-counter="'  + k + '">'  + k + '</div>';
+		}
+		
+		var preLoadItems = 5;
+
+		$( document ).ready(function() {
+    		$('#mainDivId').on('scroll', function() {
+
+		        var firstDisplayElement = "";
+		        var lastDisplayElement = "";
+		        var tmpCounter = 0;
+		        $('.dataElement:in-viewport( 0,  #mainDivId)' ).each(function(index){
+		        	if(index == 0){
+		        		firstDisplayElement = $(this);
+		        	}
+		        	lastDisplayElement = $(this);
+		        });
+
+		        if(firstDisplayElement != ""){
+		        	var firstElementIndexViewPort  = firstDisplayElement.attr("data-counter");
+		        	var firstElementDisplayed = firstElementIndexViewPort - preLoadItems;
+		        	if(firstElementDisplayed < 0){
+		        		firstElementDisplayed = 0;
+		        	}
+		        	for(var k=0; k<firstElementDisplayed; k++){
+	        			if($(".dataElement" + k).length > 0){
+	        				$(".dataElement" + k).remove();
+	        			}
+	        		}
+	        		for(var k=firstElementIndexViewPort; k>=firstElementDisplayed; k--){
+	        			if($(".dataElement" + k).length == 0 && htmlObj[k]){
+	        				$('#mainDivId').prepend(htmlObj[k]);
+	        			}
+	        		}
+		        }
+		        
+		        $(".dataElement").css("padding-top", 0);
+		        var firstElement = $('#mainDivId div').first();
+
+		        if(firstElement){
+		        	var tmpCounter = firstElement.attr("data-counter");
+		        	var margintop = tmpCounter * 30;
+		        	firstElement.css("padding-top", margintop);
+		        }
+
+		       
+
+
+		        if(lastDisplayElement != ""){
+		        	var lastElementIndexViewPort  = lastDisplayElement.attr("data-counter");
+		        	var lastElementDisplayed = parseInt(lastElementIndexViewPort) + preLoadItems;
+		        	console.log(lastElementIndexViewPort + "===" + lastElementDisplayed + "===" + htmlObj.length);
+		        	if(lastElementDisplayed < 0 || lastElementDisplayed > htmlObj.length){
+		        		lastElementDisplayed = htmlObj.length;
+		        	}
+		        	
+
+		        	for(var k=lastElementDisplayed; k<htmlObj.length; k++){
+	        			if($(".dataElement" + k).length > 0){
+	        				$(".dataElement" + k).remove();
+	        			}
+	        		}
+	        		for(var k=lastElementIndexViewPort; k<=lastElementDisplayed; k++){
+	        			if($(".dataElement" + k).length == 0 && htmlObj[k]){
+	        				$('#mainDivId').append(htmlObj[k]);
+	        			}
+	        		}
+		        }
+
+		        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+		        	var tmp = htmlObj.length;
+		            for(var k=htmlObj.length; k<(tmp + 10 ); k++){
+		            	htmlObj[k] = '<div class="dataElement dataElement' + k + '" data-counter="'  + k + '">'  + k + '</div>';
+		            	$('#lastDivId').before(htmlObj[k]);
+		            }
+		        } 
+    			
+		    })
+		});
+	</script>
+	</body>
+</html>
